@@ -82,8 +82,8 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         sessions.values().forEach(s -> {
             try {
                 if (s.isOpen()) {
-                    var msg = chatMessage.getSender() + ": " + chatMessage.getContent();
-                    s.sendMessage(new TextMessage(msg));
+                    //var msg = chatMessage.getSender() + ": " + chatMessage.getContent();
+                    s.sendMessage(new TextMessage( chatMessage.getContent()));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
