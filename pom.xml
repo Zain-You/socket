@@ -75,14 +75,6 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
-        <!-- 如果使用 Lettuce（默认）作为客户端，可以不额外添加 -->
-        <!-- 如果使用 Jedis，可以添加 Jedis 依赖 -->
-        <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
     </dependencies>
 
     <build>

@@ -1,9 +1,12 @@
+package com.zain.springwebsocket.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zain.springwebsocket.handler.ChatWebSocketHandler;
 import com.zain.springwebsocket.model.ChatMessage;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
+
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -28,8 +31,10 @@ public class RedisSubscriber implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] pattern) {
         try {
+            // 将 byte[] 转成 String，再解析 JSON
+            String json = new String(message.getBody(), StandardCharsets.UTF_8);
             // 解析消息为 ChatMessage 对象
-            ChatMessage chatMessage = objectMapper.readValue(message.getBody(), ChatMessage.class);
+            ChatMessage chatMessage = objectMapper.readValue(json, ChatMessage.class);
             // 广播到本节点客户端
             handler.broadcastMessage(chatMessage);
         } catch (Exception e) {

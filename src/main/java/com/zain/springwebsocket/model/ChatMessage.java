@@ -1,10 +1,8 @@
 package com.zain.springwebsocket.model;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import lombok.Data;
-import java.time.LocalDateTime;
 import jakarta.persistence.*;
 
 /**
@@ -27,5 +25,5 @@ public class ChatMessage {
     private String content;
 
     /** 消息发送时间 */
-    private LocalDateTime timestamp;
+    private String timestamp;
 }

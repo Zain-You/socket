@@ -10,6 +10,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -54,11 +55,12 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setSender(session.getId());
         chatMessage.setContent(payload);
-        chatMessage.setTimestamp(LocalDateTime.now());
+        chatMessage.setTimestamp(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         repository.save(chatMessage);
 
+        var json = objectMapper.writeValueAsString(chatMessage);
         // 发布消息到 Redis（实现分布式广播）
-        redisTemplate.convertAndSend("chatChannel", objectMapper.writeValueAsString(chatMessage));
+        redisTemplate.convertAndSend("chatChannel", json);
     }
 
     /**
@@ -80,7 +82,8 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         sessions.values().forEach(s -> {
             try {
                 if (s.isOpen()) {
-                    s.sendMessage(new TextMessage(chatMessage.getSender() + ": " + chatMessage.getContent()));
+                    var msg = chatMessage.getSender() + ": " + chatMessage.getContent();
+                    s.sendMessage(new TextMessage(msg));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
